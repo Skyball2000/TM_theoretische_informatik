@@ -71,7 +71,7 @@ public class TM {
             case RIGHT:
                 //ToDo
                 break;
-            case NONE:
+            default:
                 break;
         }
     }
