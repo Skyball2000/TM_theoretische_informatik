@@ -26,7 +26,7 @@ public class TM {
 
     public void setAlphabet(String[] alphabet) {
         ArrayList<String> alp = new ArrayList<>(Arrays.asList(alphabet));
-        alp.add("");
+        alp.add("#");
         String[] arr = new String[alp.size()];
         this.Alphabet = alp.toArray(arr);
     }
@@ -35,7 +35,7 @@ public class TM {
         String[] symbol = tape.split("");
         for (String s : symbol) {
             if (Arrays.stream(Alphabet).noneMatch(s::equals)) {
-                throw new IOException("Symbol in the tabe must be in Alphabet or '#' (as Blank)");
+                throw new IOException("Symbol in the tape must be in Alphabet or '#' (as Blank)");
             }
         }
 
