@@ -1,0 +1,12 @@
+---
+alphabet:
+  - "a"
+  - "b"
+transition:
+  - "A,a,R,A,b"
+  - "A,b,R,A,a"
+  - "A,#,L,B,#"
+q:
+  - "A"
+  - "B"
+tape: aabbaa # result should be bbaabb
