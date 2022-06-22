@@ -1,4 +1,6 @@
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 enum Direction {
     LEFT(-1),
@@ -48,19 +50,23 @@ public class Transition {
         this.newSymbol = newSymbol;
     }
 
-    static public Transition fromInput(String encodedState) throws IOException {
-        String[] encodedStateList = encodedState.split(", ?");
-        if (encodedStateList.length != 5) {
-            throw new IOException("Encoded Transition pattern 'STATE, SYMBOL, DIRECTION [L|R], NEW STATE, NEW SYMBOL'");
-        }
+    private final static Pattern CSV_TRANSITION_PATTERN = Pattern.compile("^([^,]+),([^,]+),([LRN]|LEFT|RIGHT|NONE),([^,]+),([^,]+)$");
+    private final static Pattern BRACKET_ARROW_TRANSITION_PATTERN = Pattern.compile("^\\(([^,]+), *([^,]+)\\) *-> *\\(([LRN]|LEFT|RIGHT|NONE), *([^,]+), *([^,]+)\\)$");
 
-        return new Transition(
-                encodedStateList[0],
-                encodedStateList[1],
-                Direction.fromString(encodedStateList[2]),
-                encodedStateList[3],
-                encodedStateList[4]
-        );
+    static public Transition fromInput(String encodedState) {
+        for (Pattern pattern : Arrays.asList(CSV_TRANSITION_PATTERN, BRACKET_ARROW_TRANSITION_PATTERN)) {
+            Matcher matcher = pattern.matcher(encodedState);
+            if (matcher.matches()) {
+                return new Transition(
+                        matcher.group(1),
+                        matcher.group(2),
+                        Direction.fromString(matcher.group(3)),
+                        matcher.group(4),
+                        matcher.group(5)
+                );
+            }
+        }
+        throw new IllegalArgumentException("Invalid transition: " + encodedState);
     }
 
     @Override

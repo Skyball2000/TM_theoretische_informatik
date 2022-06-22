@@ -62,7 +62,7 @@ public class TM {
     }
 
     public String processTape() {
-        while (true) {
+        for (int i = 0; i < 100000; i++) {
             Transition t;
             try {
                 t = getTransition(currentState, tape.get(currentPointer));
@@ -154,6 +154,7 @@ public class TM {
 
         if (currentPointer < 0) {
             tape.add(0, "#");
+            currentPointer++;
         } else if (currentPointer >= tape.size()) {
             tape.add("#");
         }
