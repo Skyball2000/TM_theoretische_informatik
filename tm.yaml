@@ -9,4 +9,5 @@ transition:
 q:
   - "A"
   - "B"
-tape: aabbaa # result should be bbaabb
+tape: aabbaa
+expected: bbaabb

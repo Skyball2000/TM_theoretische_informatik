@@ -28,7 +28,7 @@ public class Main {
 
         System.out.println("TM Starting ...");
         if (Arrays.stream(args).anyMatch(arg -> arg.startsWith("-yaml"))) {
-            String yamlParameter = Arrays.stream(args).filter(arg -> arg.startsWith("-yaml")).findFirst().map(arg -> arg.substring(6)).orElse("tm.yaml");
+            String yamlParameter = Arrays.stream(args).filter(arg -> arg.startsWith("-yaml") && !arg.equals("-yaml")).findFirst().map(arg -> arg.substring(6)).orElse("tm.yaml");
             ArgsManager.fromYAML(tm, yamlParameter);
         } else {
             ArgsManager.fromCMD(tm);

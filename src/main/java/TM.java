@@ -11,6 +11,7 @@ public class TM {
 
     private int currentPointer = 0;
     private String currentState;
+    private String expectedOutput;
 
     public TM() {
         this.T = new ArrayList<>();
@@ -43,6 +44,9 @@ public class TM {
         this.tape = new ArrayList<>(Arrays.asList(tape.split("")));
     }
 
+    public void setExpectedOutput(String expectedOutput) {
+        this.expectedOutput = expectedOutput;
+    }
 
     public void addTransition(String encodedTransition) throws IOException {
         Transition t = Transition.fromInput(encodedTransition);
@@ -67,7 +71,7 @@ public class TM {
             try {
                 t = getTransition(currentState, tape.get(currentPointer));
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.err.println(e.getMessage());
                 break;
             }
 
@@ -84,6 +88,14 @@ public class TM {
 
         trimTape();
         printState(null);
+
+        if (expectedOutput != null && !expectedOutput.equals("null")) {
+            if (expectedOutput.equals(String.join("", tape))) {
+                System.out.println("Output matches expected output: " + expectedOutput);
+            } else {
+                System.err.println("Output is incorrect, expected: " + expectedOutput + ", actual: " + String.join("", tape));
+            }
+        }
 
         return String.join("", tape);
     }

@@ -13,6 +13,7 @@ public class ArgsManager {
         private String[] alphabet;
         private String[] transition;
         private String tape;
+        private String expected;
 
         public void setTransition(String[] transition) {
             this.transition = transition;
@@ -28,6 +29,10 @@ public class ArgsManager {
 
         public void setTape(String tape) {
             this.tape = tape;
+        }
+
+        public void setExpected(String expected) {
+            this.expected = expected;
         }
     }
 
@@ -81,6 +86,7 @@ public class ArgsManager {
         tm.setQ(args.q);
         tm.setAlphabet(args.alphabet);
         tm.setTape(args.tape);
+        tm.setExpectedOutput(args.expected);
         for (int i = 0; i < args.transition.length; ++i) {
             try {
                 tm.addTransition(args.transition[i]);
