@@ -22,16 +22,18 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
 
+        // to use a different yaml file, use -yaml=<filename>
+
         TM tm = new TM();
 
         System.out.println("TM Starting ...");
-        if (Arrays.asList(args).contains("-yaml")) {
-            ArgsManager.fromYAML(tm);
+        if (Arrays.stream(args).anyMatch(arg -> arg.startsWith("-yaml"))) {
+            String yamlParameter = Arrays.stream(args).filter(arg -> arg.startsWith("-yaml")).findFirst().map(arg -> arg.substring(6)).orElse("tm.yaml");
+            ArgsManager.fromYAML(tm, yamlParameter);
         } else {
             ArgsManager.fromCMD(tm);
         }
 
-        // ToDo RUN TM
         tm.processTape();
 
         System.out.print("Result: ");

@@ -66,8 +66,8 @@ public class ArgsManager {
         }
     }
 
-    static void fromYAML(TM tm) throws IOException {
-        Path filePath = Path.of("tm.yaml");
+    static void fromYAML(TM tm, String path) throws IOException {
+        Path filePath = Path.of(path);
         String yamlString;
         try {
             yamlString = Files.readString(filePath);

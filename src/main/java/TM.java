@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class TM {
     public String[] Q;
@@ -45,8 +46,10 @@ public class TM {
 
     public void addTransition(String encodedTransition) throws IOException {
         Transition t = Transition.fromInput(encodedTransition);
-        if (Arrays.stream(Q).noneMatch(t.state::equals) || Arrays.stream(Q).noneMatch(t.newState::equals)) {
-            throw new IOException("STATE and NEW STATE must be in Q");
+        if (Arrays.stream(Q).noneMatch(t.state::equals)) {
+            throw new IOException("STATE [" + t.state + "] must be in Q");
+        } else if (Arrays.stream(Q).noneMatch(t.newState::equals)) {
+            throw new IOException("NEW STATE [" + t.newState + "] must be in Q");
         }
         if (Arrays.stream(Alphabet).noneMatch(t.symbol::equals) || Arrays.stream(Alphabet).noneMatch(t.newSymbol::equals)) {
             throw new IOException("SYMBOL and NEW SYMBOL must be in Alphabet or '#' (as Blank)");
@@ -59,8 +62,6 @@ public class TM {
     }
 
     public String processTape() {
-        printState();
-
         while (true) {
             Transition t;
             try {
@@ -70,11 +71,11 @@ public class TM {
                 break;
             }
 
+            printState(t);
+
             tape.set(currentPointer, t.newSymbol);
             currentState = t.newState;
             movePointer(t.direction);
-
-            printState();
 
             if (t.newState.equals("f")) {
                 break;
@@ -82,6 +83,7 @@ public class TM {
         }
 
         trimTape();
+        printState(null);
 
         return String.join("", tape);
     }
@@ -126,8 +128,25 @@ public class TM {
         System.out.println("  current state = " + currentState);
     }
 
-    private void printState() {
-        System.out.println("state " + currentState + " at " + currentPointer + " on [" + String.join(" ", tape) + "]");
+    private void printState(Transition transition) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(tape.stream().collect(Collectors.joining(" ", "[", "]")));
+        sb.append("\n ");
+
+        for (int i = 0; i < currentPointer; i++) {
+            sb.append("  ");
+        }
+
+        sb.append("^ ");
+
+        if (transition != null) {
+            sb.append(transition);
+        } else {
+            sb.append(currentState);
+        }
+
+        System.out.println(sb);
     }
 
     private void movePointer(Direction dir) {
