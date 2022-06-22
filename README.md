@@ -1,5 +1,10 @@
 # Simulation of a Turing Machine.
 ### Exercise THI
+
+Implementation by **[Yan Wittmann](https://github.com/Skyball2000)**.
+
+Add the `-yaml=<file>` option to the command line to load a YAML file.
+
 ## How to run
  - clone Repo  into your Project Directory (Or simply download source code from github.com):
  ```

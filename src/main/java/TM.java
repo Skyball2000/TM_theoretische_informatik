@@ -62,7 +62,7 @@ public class TM {
     }
 
     public String processTape() {
-        for (int i = 0; i < 100000; i++) {
+        while (true) {
             Transition t;
             try {
                 t = getTransition(currentState, tape.get(currentPointer));
