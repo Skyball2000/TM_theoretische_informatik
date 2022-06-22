@@ -31,7 +31,7 @@ public class ArgsManager {
         }
     }
 
-    static void fromCMD(TM tm ) throws IOException {
+    static void fromCMD(TM tm) throws IOException {
         Scanner in = new Scanner(System.in);
         System.out.print("Enter States Q:");
         tm.setQ(in.next().split("[, ]"));
@@ -44,10 +44,10 @@ public class ArgsManager {
         System.out.println("STATE and NEW STATE must be in Q");
         System.out.println("SYMBOL and NEW SYMBOL must be in Alphabet or '#' (as Blank)");
         System.out.println("DIRECTION must be L or R");
-        while(true) {
+        while (true) {
             System.out.print("Add Transition: (Q to quit)");
             input = in.next();
-            if(input.equals("Q")) {
+            if (input.equals("Q")) {
                 break;
             }
             try {
@@ -81,7 +81,7 @@ public class ArgsManager {
         tm.setQ(args.q);
         tm.setAlphabet(args.alphabet);
         tm.setTape(args.tape);
-        for(int i = 0; i < args.transition.length; ++i) {
+        for (int i = 0; i < args.transition.length; ++i) {
             try {
                 tm.addTransition(args.transition[i]);
             } catch (IOException e) {

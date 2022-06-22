@@ -1,34 +1,70 @@
 import java.io.IOException;
 
 enum Direction {
-    LEFT,
-    RIGHT,
-    NONE
+    LEFT(-1),
+    RIGHT(1),
+    NONE(0);
+
+    public final int value;
+
+    Direction(int value) {
+        this.value = value;
+    }
+
+    public static Direction fromString(String s) {
+        if (s.equals("L")) {
+            return LEFT;
+        } else if (s.equals("R")) {
+            return RIGHT;
+        } else {
+            return NONE;
+        }
+    }
+
+    public int getValue() {
+        return 0;
+    }
 }
 
 public class Transition {
-    public String state;
-    public String symbol;
+    public final String state;
+    public final String symbol;
 
-    public Direction direction;
+    public final Direction direction;
 
 
-    public String newState;
-    public String newSymbol;
+    public final String newState;
+    public final String newSymbol;
 
-    static public Transition parseTransition(String encodedState) throws IOException {
+    private Transition() {
+        this("", "", Direction.NONE, "", "");
+    }
+
+    public Transition(String state, String symbol, Direction direction, String newState, String newSymbol) {
+        this.state = state;
+        this.symbol = symbol;
+        this.direction = direction;
+        this.newState = newState;
+        this.newSymbol = newSymbol;
+    }
+
+    static public Transition fromInput(String encodedState) throws IOException {
         String[] encodedStateList = encodedState.split(", ?");
         if (encodedStateList.length != 5) {
             throw new IOException("Encoded Transition pattern 'STATE, SYMBOL, DIRECTION [L|R], NEW STATE, NEW SYMBOL'");
         }
 
-        Transition transition = new Transition();
-        transition.state = encodedStateList[0];
-        transition.symbol = encodedStateList[1];
-        transition.direction = encodedStateList[2].equals("L") ? Direction.LEFT : encodedStateList[2].equals("R") ? Direction.RIGHT : Direction.NONE;
-        transition.newState = encodedStateList[3];
-        transition.newSymbol = encodedStateList[4];
+        return new Transition(
+                encodedStateList[0],
+                encodedStateList[1],
+                Direction.fromString(encodedStateList[2]),
+                encodedStateList[3],
+                encodedStateList[4]
+        );
+    }
 
-        return transition;
+    @Override
+    public String toString() {
+        return "(" + state + ", " + symbol + ") -> (" + newState + ", " + newSymbol + ", " + direction + ")";
     }
 }

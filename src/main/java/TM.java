@@ -44,7 +44,7 @@ public class TM {
 
 
     public void addTransition(String encodedTransition) throws IOException {
-        Transition t = Transition.parseTransition(encodedTransition);
+        Transition t = Transition.fromInput(encodedTransition);
         if (Arrays.stream(Q).noneMatch(t.state::equals) || Arrays.stream(Q).noneMatch(t.newState::equals)) {
             throw new IOException("STATE and NEW STATE must be in Q");
         }
@@ -59,20 +59,84 @@ public class TM {
     }
 
     public String processTape() {
-        // ToDo implement the processing!
-        return "";
+        printState();
+
+        while (true) {
+            Transition t;
+            try {
+                t = getTransition(currentState, tape.get(currentPointer));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                break;
+            }
+
+            tape.set(currentPointer, t.newSymbol);
+            currentState = t.newState;
+            movePointer(t.direction);
+
+            printState();
+
+            if (t.newState.equals("f")) {
+                break;
+            }
+        }
+
+        trimTape();
+
+        return String.join("", tape);
+    }
+
+    private void trimTape() {
+        for (int i = tape.size() - 1; i >= 0; i--) {
+            if (tape.get(i).equals("#")) {
+                tape.remove(i);
+                if (currentPointer > i) {
+                    currentPointer--;
+                }
+            } else {
+                break;
+            }
+        }
+        for (int i = 0; i < tape.size(); i++) {
+            if (tape.get(i).equals("#")) {
+                tape.remove(i);
+                if (currentPointer > i) {
+                    currentPointer--;
+                }
+            }
+        }
+    }
+
+    private Transition getTransition(String state, String symbol) {
+        for (Transition t : T) {
+            if (t.state.equals(state) && t.symbol.equals(symbol)) {
+                return t;
+            }
+        }
+
+        throw new IllegalArgumentException("No transition found for state " + state + " and symbol " + symbol);
+    }
+
+    private void printTM() {
+        System.out.println("         states = " + Arrays.toString(Q));
+        System.out.println("       alphabet = " + Arrays.toString(Alphabet));
+        System.out.println("    transitions = " + T);
+        System.out.println("           tape = " + tape);
+        System.out.println("current pointer = " + currentPointer);
+        System.out.println("  current state = " + currentState);
+    }
+
+    private void printState() {
+        System.out.println("state " + currentState + " at " + currentPointer + " on [" + String.join(" ", tape) + "]");
     }
 
     private void movePointer(Direction dir) {
-        switch (dir) {
-            case LEFT:
-                //ToDo
-                break;
-            case RIGHT:
-                //ToDo
-                break;
-            default:
-                break;
+        currentPointer += dir.value;
+
+        if (currentPointer < 0) {
+            tape.add(0, "#");
+        } else if (currentPointer >= tape.size()) {
+            tape.add("#");
         }
     }
 }
