@@ -1,0 +1,40 @@
+# multiply the '|' elements
+alphabet:
+  - "|"
+  - "+"
+  - "="
+  - "a"
+q:
+  - "A"
+  - "B"
+  - "C"
+  - "D"
+  - "f"
+transition:
+  # go forward until end and place '='
+  - "(A, |) -> (R, A, |)"
+  - "(A, +) -> (R, A, +)"
+  - "(A, #) -> (L, B, =)"
+
+  # go backwards until '|' is found
+  - "(B, =) -> (L, B, =)"
+  - "(B, +) -> (L, B, +)"
+  - "(B, a) -> (L, B, a)"
+  - "(B, |) -> (R, C, a)"
+  - "(B, #) -> (R, D, #)"
+
+  # go forwards from '|' and place 'a' at end
+  - "(C, =) -> (R, C, =)"
+  - "(C, +) -> (R, C, +)"
+  - "(C, |) -> (R, C, a)"
+  - "(C, a) -> (R, C, a)"
+  - "(C, #) -> (L, B, |)"
+
+  # go forwards until end, replace all 'a' with |
+  - "(D, a) -> (R, D, |)"
+  - "(D, |) -> (R, D, |)"
+  - "(D, +) -> (R, D, +)"
+  - "(D, =) -> (R, D, =)"
+  - "(D, #) -> (R, f, #)"
+tape: "||||||+||||"
+expected: "||||||+||||=||||||||||"

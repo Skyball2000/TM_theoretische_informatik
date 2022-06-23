@@ -14,6 +14,7 @@ public class ArgsManager {
         private String[] transition;
         private String tape;
         private String expected;
+        private int maxIterations;
 
         public void setTransition(String[] transition) {
             this.transition = transition;
@@ -33,6 +34,10 @@ public class ArgsManager {
 
         public void setExpected(String expected) {
             this.expected = expected;
+        }
+
+        public void setMaxIterations(int maxIterations) {
+            this.maxIterations = maxIterations;
         }
     }
 
@@ -87,6 +92,7 @@ public class ArgsManager {
         tm.setAlphabet(args.alphabet);
         tm.setTape(args.tape);
         tm.setExpectedOutput(args.expected);
+        tm.setMaxIterations(args.maxIterations);
         for (int i = 0; i < args.transition.length; ++i) {
             try {
                 tm.addTransition(args.transition[i]);

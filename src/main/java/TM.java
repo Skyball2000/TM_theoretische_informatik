@@ -12,6 +12,7 @@ public class TM {
     private int currentPointer = 0;
     private String currentState;
     private String expectedOutput;
+    private int maxIterations;
 
     public TM() {
         this.T = new ArrayList<>();
@@ -48,6 +49,10 @@ public class TM {
         this.expectedOutput = expectedOutput;
     }
 
+    public void setMaxIterations(int maxIterations) {
+        this.maxIterations = maxIterations;
+    }
+
     public void addTransition(String encodedTransition) throws IOException {
         Transition t = Transition.fromInput(encodedTransition);
         if (Arrays.stream(Q).noneMatch(t.state::equals)) {
@@ -66,23 +71,16 @@ public class TM {
     }
 
     public String processTape() {
-        while (true) {
-            Transition t;
-            try {
-                t = getTransition(currentState, tape.get(currentPointer));
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
-                break;
+        if (this.maxIterations == 0) {
+            while (true) {
+                if (stepTape()) break;
             }
-
-            printState(t);
-
-            tape.set(currentPointer, t.newSymbol);
-            currentState = t.newState;
-            movePointer(t.direction);
-
-            if (t.newState.equals("f")) {
-                break;
+        } else {
+            for (int i = 0; i < this.maxIterations; i++) {
+                if (stepTape()) break;
+                if (i == this.maxIterations - 1) {
+                    System.err.println("Max Iterations reached: " + this.maxIterations);
+                }
             }
         }
 
@@ -100,11 +98,29 @@ public class TM {
         return String.join("", tape);
     }
 
+    private boolean stepTape() {
+        Transition t;
+        try {
+            t = getTransition(currentState, tape.get(currentPointer));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return true;
+        }
+
+        printState(t);
+
+        tape.set(currentPointer, t.newSymbol);
+        currentState = t.newState;
+        movePointer(t.direction);
+
+        return t.newState.equals("f");
+    }
+
     private void trimTape() {
         for (int i = tape.size() - 1; i >= 0; i--) {
             if (tape.get(i).equals("#")) {
                 tape.remove(i);
-                if (currentPointer > i) {
+                if (currentPointer >= i) {
                     currentPointer--;
                 }
             } else {
