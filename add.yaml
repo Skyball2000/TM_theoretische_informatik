@@ -1,4 +1,4 @@
-# multiply the '|' elements
+# add the '|' elements
 alphabet:
   - "|"
   - "+"
